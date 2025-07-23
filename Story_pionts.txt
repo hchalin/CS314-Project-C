@@ -1,0 +1,35 @@
+TEAM: Group C
+STORY: SH1
+HOURS TO IMPLEMENT (estimate): 4 Hours
+HOURS TO IMPLEMENT (actual):
+ENGINEER: Josiah Baker
+
+STORY: SH3
+HOURS TO IMPLEMENT (estimate): 2 Hours
+HOURS TO IMPLEMENT (actual):
+ENGINEER: Simra Saleem
+
+STORY: SH4
+HOURS TO IMPLEMENT (estimate): 2 Hours
+HOURS TO IMPLEMENT (actual):
+ENGINEER: Simrah Saleem
+
+STORY: SH7
+HOURS TO IMPLEMENT (estimate): 4 hours
+HOURS TO IMPLEMENT (actual):
+ENGINEER: lex alberandt 
+
+STORY: SH5
+HOURS TO IMPLEMENT (estimate): 2 hours
+HOURS TO IMPLEMENT (actual):
+ENGINEER: Hassan Abdi 
+
+STORY:SH6
+HOURS TO IMPLEMENT (estimate): 
+HOURS TO IMPLEMENT (actual):
+ENGINEER: Hayden Chalin
+
+STORY:SH2
+HOURS TO IMPLEMENT (estimate): 4 Hours
+HOURS TO IMPLEMENT (actual):
+ENGINEER: Josiah Baker
