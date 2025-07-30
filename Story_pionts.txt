@@ -25,7 +25,7 @@ HOURS TO IMPLEMENT (actual):
 ENGINEER: Hassan Abdi 
 
 STORY:SH6
-HOURS TO IMPLEMENT (estimate): 
+HOURS TO IMPLEMENT (estimate): 4 Hours
 HOURS TO IMPLEMENT (actual):
 ENGINEER: Hayden Chalin
 
