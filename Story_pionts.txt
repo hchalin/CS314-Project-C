@@ -17,14 +17,14 @@ ENGINEER: Simrah Saleem
 STORY: SH7
 HOURS TO IMPLEMENT (estimate): 4 hours
 HOURS TO IMPLEMENT (actual):
-ENGINEER: lex alberandt 
+ENGINEER: lex alberandt
 
 STORY: SH5
 HOURS TO IMPLEMENT (estimate): 2 hours
 HOURS TO IMPLEMENT (actual):
-ENGINEER: Hassan Abdi 
+ENGINEER: Hassan Abdi
 
-STORY:SH6
+STORY:SH6     - Sensor class
 HOURS TO IMPLEMENT (estimate): 4 Hours
 HOURS TO IMPLEMENT (actual):
 ENGINEER: Hayden Chalin
