@@ -2,7 +2,12 @@ import tkinter
 from tkinter import messagebox
 
 import shared_items
-
+import load_artifacts
+# Initialize game data from ARTIFACT.TXT
+game_data = load_artifacts.get_game_data()
+artifacts = game_data["artifacts"]
+planets = game_data["planets"]
+target_planet = game_data["target"]
 
 def direction_click(direction):
    messagebox.showinfo("Info!","You Pushed "+direction)       #pop up alert box
