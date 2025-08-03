@@ -16,12 +16,9 @@ Methods:
 
 class Sensor:
   # Attributes
-  pos: int = {0,0}            # Position of the Sensor
-  search_radius: int = 2      # Search radius capability of the Sesor
 
-  def __init__(self):
-    pass
+  def __init__(self, pos=(0, 0), search_radius=2):
+    self.pos = pos            # Position of the Sensor
+    self.search_radius = search_radius 
 
-  def add(self) -> None:
-    print("Add Sensor!")
 

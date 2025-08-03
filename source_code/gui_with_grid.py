@@ -1,9 +1,19 @@
+"""
+THIS IS OLD THAT IS NOW DEPRECATED
+REFER TO source_code/Control_Panel.py FOR THE NEW GUI
+This file was used to create a simple GUI for the ship control panel.
+It includes buttons for movement and sensor deployment, and displays the ship's status.
+
+To run program, execute main.py
+
+"""
 import tkinter
 from tkinter import messagebox
 
 #imports
 import shared_items
 import load_artifacts
+
 # Initialize game data from ARTIFACT.TXT
 game_data = load_artifacts.get_game_data()
 artifacts = game_data["artifacts"]
