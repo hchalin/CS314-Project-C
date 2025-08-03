@@ -1,4 +1,3 @@
-
 """
 Sensor Class
 
@@ -18,7 +17,7 @@ Methods:
 class Sensor:
   # Attributes
   pos: int = {0,0}            # Position of the Sensor
-  search_radius: int = 0      # Search radius capability of the Sesor
+  search_radius: int = 2      # Search radius capability of the Sesor
 
   def __init__(self):
     pass

@@ -8,7 +8,8 @@ import load_artifacts
 game_data = load_artifacts.get_game_data()
 artifacts = game_data["artifacts"]
 planets = game_data["planets"]
-target_planet = game_data["target"]from Sensor import Sensor
+target_planet = game_data["target"]
+from Sensor import Sensor
 
 
 # Instantiate sensor

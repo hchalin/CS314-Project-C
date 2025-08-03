@@ -1,9 +1,8 @@
 import os
 # This code is designed to load artifacts from a text file
 def get_game_data(filename="ARTIFACT.TXT"):
-    # Get the directory where this script is located
+    # I added a relative path to the ARTIFACT.TXT file
     script_dir = os.path.dirname(os.path.abspath(__file__))
-    # Create the full path to the file
     file_path = os.path.join(script_dir, filename)
     
     artifacts = {}
