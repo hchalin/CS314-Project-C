@@ -3,7 +3,12 @@ from tkinter import messagebox
 
 #imports
 import shared_items
-from Sensor import Sensor
+import load_artifacts
+# Initialize game data from ARTIFACT.TXT
+game_data = load_artifacts.get_game_data()
+artifacts = game_data["artifacts"]
+planets = game_data["planets"]
+target_planet = game_data["target"]from Sensor import Sensor
 
 
 # Instantiate sensor
