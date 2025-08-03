@@ -1,8 +1,13 @@
 import tkinter
 from tkinter import messagebox
 
+#imports
 import shared_items
+from Sensor import Sensor
 
+
+# Instantiate sensor
+sensor = Sensor()
 
 def direction_click(direction):
    messagebox.showinfo("Info!","You Pushed "+direction)       #pop up alert box
@@ -10,6 +15,13 @@ def direction_click(direction):
    message_field.config(text="Someone's pushing my buttons!") #change the message display
    # this would be a good place to call functions that process the move
    return
+
+def sensor_click(loc: tuple)-> None:
+   # This function is called when you place a sensor
+   sensor.add()
+   messagebox.showinfo("Sensor Added", "You have added a sensor at location *loc*\n Search radius: *SR*")
+   return
+
 
 # create pop-up window for supplemental information if needed
 #pop_up = tkinter.Tk()
@@ -55,6 +67,10 @@ right_button = tkinter.Button(control_panel, text="RIGHT", command = lambda:dire
 right_button.grid(column=2,row=2,sticky="W")
 down_button = tkinter.Button(control_panel, text="DOWN", command = lambda:direction_click("DOWN"))
 down_button.grid(column=1,row=3,sticky="N")
+
+# Add sensor to current location button
+add_sensor_button = tkinter.Button(control_panel, text="Add Sensor", command= lambda:sensor_click(location_field))
+add_sensor_button.grid(column=4, row=2)         # Add Sensor to current location (feel free to move location of the control grid!)
 
 # arrange information display
 location_label = tkinter.Label(control_panel,text="Current Location")
