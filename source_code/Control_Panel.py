@@ -12,6 +12,8 @@ import tkinter as tk
 from tkinter import messagebox
 from Sensor import Sensor
 import load_artifacts
+from celestial_map import celestial_map
+from celestial_map import get_initial_planets
 
 class Control_Panel:
     def __init__(self, ship):
@@ -25,7 +27,11 @@ class Control_Panel:
         self.artifacts = game_data["artifacts"]
         self.planets = game_data["planets"]
         self.target_planet = game_data["target"]
-        
+
+        # Load the celestial map
+        initial_planets = get_initial_planets(game_data)
+        self.map = celestial_map(initial_planets)
+
         # GUI elements (will be set when GUI is created)
         self.location_field = None
         self.message_field = None
@@ -71,6 +77,13 @@ class Control_Panel:
                 f"Artifacts detected: {len(self.artifacts)}"
             )
             messagebox.showinfo("Ship Status", status_info)
+            
+    def _display_cel_map(self):
+        """Display celestial map in a popup window"""
+        if self.gui_root:
+            info_str = self.map.print_celestial_map()
+            messagebox.showinfo("Celestial Map", info_str)
+        
     
     def _create_gui(self):
         """Create the GUI control panel"""
@@ -117,6 +130,11 @@ class Control_Panel:
             sensor_button = tk.Button(self.gui_root, text="Add Sensor", 
                                     command=self._handle_sensor_deployment)
             sensor_button.grid(column=4, row=2)
+            
+            # Celestial map bbutton
+            map_button = tk.Button(self.gui_root, text="Map",
+                                    command=self._display_cel_map)
+            map_button.grid(column=5, row=2)
             
             # Information display
             tk.Label(self.gui_root, text="Current Location").grid(column=0, row=4)

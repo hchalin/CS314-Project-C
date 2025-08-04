@@ -1,0 +1,97 @@
+"""     
+Celestial map class
+
+Author: Lex Albrandt
+Date/version: 08/04/25 v1
+        
+Purpose: 
+    Contains functions relating to the celestial map
+        
+Current Methods:
+    - visit(position, planet, artifact)
+    - print_celestial_map()
+    - get_initial_planets(game_data) -> Standalone function
+"""
+
+from typing import Dict, Tuple, Any
+
+
+# Standalone utility functions
+def get_initial_planets(game_data: Dict) -> Dict:
+    planet_names = ["Celeron", "Xeon", "Ryzen"]
+    initial_planets = {}
+
+    for name in planet_names:
+        if name in game_data.get("planets", {}):
+            initial_planets[name] = game_data["planets"][name]
+    return initial_planets
+
+
+# Classes
+class celestial_map:
+    
+    def __init__(self, initial_planets: Dict) -> None:
+        """ Default constructor
+
+            Args:
+                initial_planets (Dict): List of initial planets for initialization
+                                        of celestial map
+            
+            Returns: None
+        """
+        self.map_data = {
+            "visited": set(),
+            "visited_info": {}
+        }
+
+        for name, coords in initial_planets.items():
+            self.map_data["visited"].add(coords)
+            self.map_data["visited_info"][coords] = {
+                "planet": name,
+                "artifact": None
+            }
+
+    
+    def visit(self, position: Tuple, planet: str, artifact: str) -> None:
+        """ Adds a visit to the celestial map with position and any planets or artifacts found
+
+            Args:
+                position (Tuple): current position in the form (int, int)
+                planet (str): name of planet
+                artifact (str): name of artifact
+        
+            Returns: None
+        """
+
+        self.map_data["visited"].add(position)
+
+        # If this location has not been visited, add a dictionary entry
+        if "visit_info" not in self.map_data:
+            self.map_data["visited_info"] = {}
+
+        # Adds dictionary information for the current location
+        self.map_data["visited_info"][position] = {
+            "planet": planet,
+            "artifact": artifact
+        }
+    
+    
+    def print_celestial_map(self) -> None:
+        """ Print the celestial map, this will likely be done in a popup box
+        
+            Args: None 
+            
+            Returns: None
+        """
+        if not self.map_data["visited_info"]:
+            return "No locations visited yet."
+
+        lines = []
+        
+        for position, info in self.map_data["visited_info"].items():
+            planet = info.get("planet", "None")
+            artifact = info.get("artiifact", "None")
+            lines.append(f"Position: {position} | Planet: {planet} | Artifact: {artifact}")
+        return "\n".join(lines)
+        
+    
