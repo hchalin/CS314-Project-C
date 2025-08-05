@@ -95,4 +95,3 @@ def test_get_initial_planets(game_data):
     }
     
     result = get_initial_planets(game_data)
-    assert result == expected

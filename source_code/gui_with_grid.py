@@ -14,28 +14,6 @@ from tkinter import messagebox
 import shared_items
 import load_artifacts
 
-<<<<<<< HEAD
-energy = shared_items.energy
-supplies = shared_items.supplies
-
-def check_energy():
-    global energy
-    energy -= 10
-    energy_field.config(text=f"{energy}")
-    if (energy < 1):
-        messagebox.showinfo("Alert!", "Your energy has fallen below 1.")
-        message_field.config(text="The game has ended!")
-    return
-
-def check_supplies():
-    global supplies
-    supplies -= 2
-    supplies_field.config(text=f"{supplies}")
-    if (supplies < 1):
-        messagebox.showinfo("Alert!", "Your supplies has fallen below 1.")
-        message_field.config(text="The game has ended!")
-    return
-=======
 # Initialize game data from ARTIFACT.TXT
 game_data = load_artifacts.get_game_data()
 artifacts = game_data["artifacts"]
@@ -46,18 +24,12 @@ from Sensor import Sensor
 
 # Instantiate sensor
 sensor = Sensor()
->>>>>>> 2971cbfce7a2f83a464a90578364a7aa4f78add0
 
 def direction_click(direction):
-   global energy
-   global supplies
    messagebox.showinfo("Info!","You Pushed "+direction)       #pop up alert box
    location_field.config(text=direction)                      #change text in current location display
    message_field.config(text="Someone's pushing my buttons!") #change the message display
    # this would be a good place to call functions that process the move
-   
-   check_energy()
-   check_supplies()
    return
 
 def sensor_click(loc: tuple)-> None:
@@ -123,11 +95,11 @@ location_field = tkinter.Label(control_panel,text="(0,0)")
 location_field.grid(column=1,row=4,sticky="W")
 energy_label = tkinter.Label(control_panel,text="Energy")
 energy_label.grid(column=0,row=5)
-energy_field = tkinter.Label(control_panel,text=f"{energy}")
+energy_field = tkinter.Label(control_panel,text="1000")
 energy_field.grid(column=1,row=5,sticky="W")
 supplies_label = tkinter.Label(control_panel,text="Supplies")
 supplies_label.grid(column=0,row=6)
-supplies_field = tkinter.Label(control_panel,text=f"{supplies}%")
+supplies_field = tkinter.Label(control_panel,text="100%")
 supplies_field.grid(column=1,row=6,sticky="W")
 money_label = tkinter.Label(control_panel,text="Money")
 money_label.grid(column=0,row=7)
@@ -137,6 +109,9 @@ message_label = tkinter.Label(control_panel,text="Message")
 message_label.grid(column=0,row=8)
 message_field = tkinter.Label(control_panel,text="No current message")
 message_field.grid(column=1,row=8,sticky="W")
+
+
+
 
 
 control_panel.mainloop()

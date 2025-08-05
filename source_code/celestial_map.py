@@ -94,4 +94,3 @@ class celestial_map:
             lines.append(f"Position: {position} | Planet: {planet} | Artifact: {artifact}")
         return "\n".join(lines)
         
-    
