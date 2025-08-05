@@ -19,6 +19,6 @@ class Sensor:
 
   def __init__(self, pos=(0, 0), search_radius=2):
     self.pos = pos            # Position of the Sensor
-    self.search_radius = search_radius 
+    self.search_radius = search_radius  # This will be 2 CP's in every direction
 
 
