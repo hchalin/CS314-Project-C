@@ -1,8 +1,20 @@
+"""
+THIS IS OLD THAT IS NOW DEPRECATED
+REFER TO source_code/Control_Panel.py FOR THE NEW GUI
+This file was used to create a simple GUI for the ship control panel.
+It includes buttons for movement and sensor deployment, and displays the ship's status.
+
+To run program, execute main.py
+
+"""
 import tkinter
 from tkinter import messagebox
 
+#imports
 import shared_items
+import load_artifacts
 
+<<<<<<< HEAD
 energy = shared_items.energy
 supplies = shared_items.supplies
 
@@ -23,6 +35,18 @@ def check_supplies():
         messagebox.showinfo("Alert!", "Your supplies has fallen below 1.")
         message_field.config(text="The game has ended!")
     return
+=======
+# Initialize game data from ARTIFACT.TXT
+game_data = load_artifacts.get_game_data()
+artifacts = game_data["artifacts"]
+planets = game_data["planets"]
+target_planet = game_data["target"]
+from Sensor import Sensor
+
+
+# Instantiate sensor
+sensor = Sensor()
+>>>>>>> 2971cbfce7a2f83a464a90578364a7aa4f78add0
 
 def direction_click(direction):
    global energy
@@ -35,6 +59,13 @@ def direction_click(direction):
    check_energy()
    check_supplies()
    return
+
+def sensor_click(loc: tuple)-> None:
+   # This function is called when you place a sensor
+   sensor.add()
+   messagebox.showinfo("Sensor Added", "You have added a sensor at location *loc*\n Search radius: *SR*")
+   return
+
 
 # create pop-up window for supplemental information if needed
 #pop_up = tkinter.Tk()
@@ -80,6 +111,10 @@ right_button = tkinter.Button(control_panel, text="RIGHT", command = lambda:dire
 right_button.grid(column=2,row=2,sticky="W")
 down_button = tkinter.Button(control_panel, text="DOWN", command = lambda:direction_click("DOWN"))
 down_button.grid(column=1,row=3,sticky="N")
+
+# Add sensor to current location button
+add_sensor_button = tkinter.Button(control_panel, text="Add Sensor", command= lambda:sensor_click(location_field))
+add_sensor_button.grid(column=4, row=2)         # Add Sensor to current location (feel free to move location of the control grid!)
 
 # arrange information display
 location_label = tkinter.Label(control_panel,text="Current Location")
