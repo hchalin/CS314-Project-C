@@ -37,3 +37,10 @@ class Sensor:
 
     x_start = (x - 2, y)  # Start scan 2 CPs to the left
     y_start = (x, y - 2)  # Start scan 2 CPs up 
+    x_end = (x + 2, y)  # End scan 2 CPs to the righ
+    y_end = (x, y + 2)  # End scan 2 CPs down 
+
+    # I find something in the StarMap, add it to the Celestial map
+
+
+

@@ -59,9 +59,7 @@ class Control_Panel:
     
     '''
     Movement
-
     '''
-
     def _handle_movement(self, direction):
         """Handle ship movement in specified direction"""
 
