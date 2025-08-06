@@ -18,9 +18,6 @@ class WormholeException(Exception):
 
 class Ship:
 
-  # Define max location (applies for both x and y)
-  MAX_CP = 128
-
   def __init__(self, name: str, position: tuple):
     # set ship status
     self.__supplies = shared_items.supplies
@@ -29,10 +26,9 @@ class Ship:
     self.__supply_useage = shared_items.supply_useage
     self.__engine_type = shared_items.starting_engine
     self.__boundary = shared_items.max
-    
-    self.name = name
-    self.sensors: list[Sensor] = []  # Initialize sensors array as empty list
-    self.control_panel = Control_Panel(self)
+    self.__name = name
+    self.__sensors: list[Sensor] = []  # Initialize sensors array as empty list
+    self.__control_panel = Control_Panel(self)
 
     self.starMap = StarMap(get_game_data()["planets"], get_game_data()["target"], get_game_data()["artifacts"])
     print(f"Ship {self.name} initialized at position {self.pos}")
