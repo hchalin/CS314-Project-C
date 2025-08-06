@@ -56,7 +56,7 @@ class TestSensorFunctionality:
         else:
             # Create a mock addSensor method for testing
             ship.supplies -= ship.supplies * 0.02  # 2% consumption
-            ship.sensors.append(Sensor(ship.pos, search_radius=2))
+            ship.sensors.append(Sensor(ship.pos, search_radius=2))      # Add the Sensor
         
         # Verify supplies decreased by 2%
         expected_supplies = initial_supplies * 0.98  # 98% remaining
@@ -137,6 +137,9 @@ class TestSensorFunctionality:
         
         detected_planets = {}
         detected_artifacts = {}
+
+
+        ## NOTE: Use this for implementation
         
         # Find planets within range
         for planet_name, planet_pos in planets.items():
@@ -145,7 +148,7 @@ class TestSensorFunctionality:
             if distance <= 2:
                 detected_planets[planet_name] = planet_pos
         
-        # Find artifacts within range
+        # Find artifacts within range                           
         for artifact_name, artifact_data in artifacts.items():
             artifact_x, artifact_y = artifact_data["x"], artifact_data["y"]
             distance = max(abs(ship_x - artifact_x), abs(ship_y - artifact_y))
