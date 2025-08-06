@@ -6,6 +6,9 @@ sensor deployment, and resource monitoring. Provides both GUI and
 command-line interfaces with looping functionality for continuous operation.
 
 This class serves as the main interface between the user and the ship's systems.
+
+NOTE: When you add more functionality to the control panel, if it is supposed to update 
+        any GUI, do not forget to call the 'update_display()' method!
 """
 
 import tkinter as tk
@@ -33,11 +36,11 @@ class Control_Panel:
         self.map = celestial_map(initial_planets)
 
         # GUI elements (will be set when GUI is created)
-        self.location_field = None
+        self.location_field = self.ship.pos
+        self.energy_field = self.ship.energy
+        self.supplies_field = self.ship.supplies
+        self.money_field = self.ship.money
         self.message_field = None
-        self.energy_field = None
-        self.supplies_field = None
-        self.money_field = None
 
     
     def start_gui_loop(self):
@@ -53,15 +56,72 @@ class Control_Panel:
         if self.gui_root:
             self.gui_root.quit()
     
+    '''
+    Movement
+
+    '''
+
     def _handle_movement(self, direction):
         """Handle ship movement in specified direction"""
-        # TODO: Implement movement logic 
-        if self.message_field:
-            self.message_field.config(text=f"Movement {direction} - Not implemented yet")
 
+        x: int = self.ship.pos[0]
+        y: int = self.ship.pos[1]
+
+        match direction.lower():
+            case "up":
+                if self.ship:
+                    new_pos = (x, y + 1)
+                    if (y + 1 >= self.ship.MAX_CP):
+                        new_pos = (x, self.ship.MAX_CP - 1)
+                    self.ship.move(new_pos)
+                    self.update_display()
+                if self.message_field:
+                    self.message_field.config(text=f"Move UP!")
+
+            case "down":
+                if self.ship:
+                    new_pos = (x, y - 1)
+                    if (y - 1 < 0):
+                        new_pos = (x, 0)
+                    self.ship.move(new_pos)
+                    self.update_display()
+                if self.message_field:
+                    self.message_field.config(text=f"Move DOWN!")
+
+            case "left":
+                if self.ship:
+                    new_pos = (x - 1, y)
+                    if (x - 1 < 0):
+                        new_pos = (0, y)
+                    self.ship.move(new_pos)
+                    self.update_display()
+                if self.message_field:
+                    self.message_field.config(text=f"Move LEFT!")
+
+            case "right":
+                if self.ship:
+                    new_pos = (x + 1, y)
+                    if (x + 1 >= self.ship.MAX_CP):
+                        new_pos = (self.ship.MAX_CP - 1, y)
+                    self.ship.move(new_pos)
+                    self.update_display()
+                if self.message_field:
+                    self.message_field.config(text=f"Move RIGHT!")
+
+
+    '''
+    Add Sensors 
+    '''
     def _handle_sensor_deployment(self):
         """Handle sensor deployment at current ship position"""
-        self.ship.addSensor()
+        if self.message_field:
+            if (self.ship.addSensor()):
+                self.message_field.config(text=f"Sensor added at {self.ship.pos}!!")
+            else:
+                self.message_field.config(text=f"Failed to add sensor at {self.ship.pos}! Sensor already exists.")
+
+
+
     
     def _display_status(self):
         """Display current ship status in a popup window"""
@@ -146,7 +206,7 @@ class Control_Panel:
             self.energy_field.grid(column=1, row=5, sticky="W")
             
             tk.Label(self.gui_root, text="Supplies").grid(column=0, row=6)
-            self.supplies_field = tk.Label(self.gui_root, text="100%")
+            self.supplies_field = tk.Label(self.gui_root, text= f"{self.supplies_field}%")
             self.supplies_field.grid(column=1, row=6, sticky="W")
             
             tk.Label(self.gui_root, text="Money").grid(column=0, row=7)
@@ -177,6 +237,19 @@ class Control_Panel:
     
     def update_display(self):
         """Update the display fields (useful for external updates)"""
+        # Update location
         if self.location_field:
             self.location_field.config(text=str(self.ship.pos))
-        # Add more field updates as needed
+
+        # Update energy field
+        if self.energy_field:
+            self.energy_field.config(text=str(self.ship.energy))
+
+        # Update supplies field
+        if self.supplies_field:
+            self.supplies_field.config(text=f"{self.ship.supplies}")
+
+        # Update money field
+        if self.money_field:
+            self.money_field.config(text=str(self.ship.money))
+
