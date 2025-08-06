@@ -13,6 +13,7 @@ NOTE: When you add more functionality to the control panel, if it is supposed to
 
 import tkinter as tk
 from tkinter import messagebox
+from tkinter import Toplevel
 from Sensor import Sensor
 import load_artifacts
 from celestial_map import celestial_map
@@ -108,6 +109,38 @@ class Control_Panel:
                 if self.message_field:
                     self.message_field.config(text=f"Move RIGHT!")
 
+        if (self.ship.energy <= 0):
+            popup = Toplevel()
+            popup.title("Game Over")
+            popup.geometry("200x200")
+
+            label = tk.Label(popup, text="Game Over", font=("Arial", 14))
+            label.pack(pady=10)
+
+            label2 = tk.Label(popup, text="Energy has run out", font=("Arial", 12))
+            label2.pack(pady=(0, 10))
+
+            close_button = tk.Button(popup, text="Close", command=self.stop)
+            close_button.pack(pady=5)
+
+            self.message_field.config(text=f"You have run out of energy! Game over.")
+
+        if (self.ship.supplies <= 0):
+            popup = Toplevel()
+            popup.title("Game Over")
+            popup.geometry("200x200")
+
+            label = tk.Label(popup, text="Game Over", font=("Arial", 14))
+            label.pack(pady=10)
+
+            label2 = tk.Label(popup, text="Supplies has run out", font=("Arial", 12))
+            label2.pack(pady=(0, 10))
+
+            close_button = tk.Button(popup, text="Close", command=self.stop)
+            close_button.pack(pady=5)
+
+            self.message_field.config(text=f"You have run out of supplies! Game over.")
+
 
     '''
     Add Sensors 
@@ -202,7 +235,7 @@ class Control_Panel:
             self.location_field.grid(column=1, row=4, sticky="W")
             
             tk.Label(self.gui_root, text="Energy").grid(column=0, row=5)
-            self.energy_field = tk.Label(self.gui_root, text="1000")
+            self.energy_field = tk.Label(self.gui_root, text=f"{self.energy_field}")
             self.energy_field.grid(column=1, row=5, sticky="W")
             
             tk.Label(self.gui_root, text="Supplies").grid(column=0, row=6)

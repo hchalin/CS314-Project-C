@@ -28,6 +28,7 @@ class Ship:
   def move(self, new_position: tuple):
     # Update the ship's position -- implement here or control panel (your choice) ? SH-1
     self.supplies = round((self.supplies * self.supply_usage_rate), 2)    # update supplies on move
+    self.energy = self.energy - 10            # update supplies on move
     self.pos = new_position
 
     #TODO - Get movemnt to work with sensors to detect celestial objects
