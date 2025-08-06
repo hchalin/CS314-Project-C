@@ -4,7 +4,6 @@ from Sensor import Sensor
 from Control_Panel import Control_Panel
 
 class Ship:
-
   # Define max location (applies for both x and y)
   MAX_CP = 128
 
@@ -37,13 +36,16 @@ class Ship:
     return
 
   def addSensor(self) -> bool:
-    """Add a sensor to the ship's sensors array"""
+    """Add a sensor to the ship's sensors array and consume 2% supplies"""
 
     # Loop through all the sensors and check to see if there is a sensor at current location
     for sensor in self.sensors:
       if sensor.pos == self.pos:
         return False
 
+    # Consume 2% of supplies for sensor deployment
+    self.supplies = round(self.supplies * 0.98, 2)  # 98% remaining (2% consumed)
+    
     new_sensor = Sensor(self.pos)   # Initialize sensor at current position
     self.sensors.append(new_sensor)
     return True
