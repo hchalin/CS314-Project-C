@@ -12,3 +12,4 @@ set_position = [0, 0]
 # "regular play" or "never dies"
 playstyle = "never dies"
 max = 10
+starting_cash = 10000
