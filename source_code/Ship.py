@@ -26,6 +26,7 @@ class Ship:
     self.__supply_useage = shared_items.supply_useage
     self.__engine_type = shared_items.starting_engine
     self.__boundary = shared_items.max
+    self.__money = shared_items.starting_cash
     self.__name = name
     self.__sensors: list[Sensor] = []  # Initialize sensors array as empty list
     self.__control_panel = Control_Panel(self)
@@ -47,6 +48,12 @@ class Ship:
 
   def debug_position(self):
       return self.__position
+  
+  def debug_money(self):
+     return self.__money
+  
+  def debug_name(self):
+     return self.__name
 
   def move(self, distance: float, angle: float):
       self.__position[0] += round(distance*math.cos(math.radians(angle)))

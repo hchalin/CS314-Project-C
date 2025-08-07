@@ -18,10 +18,11 @@ from Sensor import Sensor
 import load_artifacts
 from celestial_map import celestial_map
 from celestial_map import get_initial_planets
+import Ship
 
 class Control_Panel:
     def __init__(self, ship):
-        self.ship = ship
+        self.ship = ship # Ship.Ship()
         self.sensor = Sensor()
         self.running = False
         self.gui_root = None
@@ -37,10 +38,10 @@ class Control_Panel:
         self.map = celestial_map(initial_planets)
 
         # GUI elements (will be set when GUI is created)
-        self.location_field = self.ship.pos
-        self.energy_field = self.ship.energy
-        self.supplies_field = self.ship.supplies
-        self.money_field = self.ship.money
+        self.location_field = self.ship.debug_position()
+        self.energy_field = self.ship.debug_energy()
+        self.supplies_field = self.ship.debug_supplies()
+        self.money_field = self.ship.debug_money()
         self.message_field = None
 
     
@@ -61,55 +62,27 @@ class Control_Panel:
     Movement
 
     '''
-    #TODO, Merge my code here
     def _handle_movement(self, direction):
         """Handle ship movement in specified direction"""
 
-        x: int = self.ship.pos[0]
-        y: int = self.ship.pos[1]
+        try:
+            match direction.lower():
+                case "up":
+                    self.ship.move(1, 90)
+                case "down":
+                    self.ship.move(1, 270)
+                case "left":
+                    self.ship.move(1, 180)
+                case "right":
+                    self.ship.move(1, 0)
+        except ValueError as msg:
+            print(f"{msg} There is a value in the configuration file that is not correct")
+        except Ship.DeathException:
+            if (self.ship.energy <= 0):
+                cause = "Energy"
+            else:
+                cause = "Supplies"
 
-        match direction.lower():
-            case "up":
-                if self.ship:
-                    new_pos = (x, y + 1)
-                    if (y + 1 >= self.ship.MAX_CP):
-                        new_pos = (x, self.ship.MAX_CP - 1)
-                    self.ship.move(new_pos)
-                    self.update_display()
-                if self.message_field:
-                    self.message_field.config(text=f"Move UP!")
-
-            case "down":
-                if self.ship:
-                    new_pos = (x, y - 1)
-                    if (y - 1 < 0):
-                        new_pos = (x, 0)
-                    self.ship.move(new_pos)
-                    self.update_display()
-                if self.message_field:
-                    self.message_field.config(text=f"Move DOWN!")
-
-            case "left":
-                if self.ship:
-                    new_pos = (x - 1, y)
-                    if (x - 1 < 0):
-                        new_pos = (0, y)
-                    self.ship.move(new_pos)
-                    self.update_display()
-                if self.message_field:
-                    self.message_field.config(text=f"Move LEFT!")
-
-            case "right":
-                if self.ship:
-                    new_pos = (x + 1, y)
-                    if (x + 1 >= self.ship.MAX_CP):
-                        new_pos = (self.ship.MAX_CP - 1, y)
-                    self.ship.move(new_pos)
-                    self.update_display()
-                if self.message_field:
-                    self.message_field.config(text=f"Move RIGHT!")
-
-        if (self.ship.energy <= 0):
             popup = Toplevel()
             popup.title("Game Over")
             popup.geometry("200x200")
@@ -117,30 +90,19 @@ class Control_Panel:
             label = tk.Label(popup, text="Game Over", font=("Arial", 14))
             label.pack(pady=10)
 
-            label2 = tk.Label(popup, text="Energy has run out", font=("Arial", 12))
+            label2 = tk.Label(popup, text=f"{cause} has run out", font=("Arial", 12))
             label2.pack(pady=(0, 10))
 
             close_button = tk.Button(popup, text="Close", command=self.stop)
             close_button.pack(pady=5)
 
-            self.message_field.config(text=f"You have run out of energy! Game over.")
+            self.message_field.config(text=f"You have run out of {cause}! Game over.")
+        except Ship.WormholeException:
+            print("Hit a wormhole")
 
-        if (self.ship.supplies <= 0):
-            popup = Toplevel()
-            popup.title("Game Over")
-            popup.geometry("200x200")
-
-            label = tk.Label(popup, text="Game Over", font=("Arial", 14))
-            label.pack(pady=10)
-
-            label2 = tk.Label(popup, text="Supplies has run out", font=("Arial", 12))
-            label2.pack(pady=(0, 10))
-
-            close_button = tk.Button(popup, text="Close", command=self.stop)
-            close_button.pack(pady=5)
-
-            self.message_field.config(text=f"You have run out of supplies! Game over.")
-
+        self.update_display()
+        if self.message_field:
+            self.message_field.config(text=f"Move {direction.lower()}!")
 
     '''
     Add Sensors 
@@ -149,9 +111,9 @@ class Control_Panel:
         """Handle sensor deployment at current ship position"""
         if self.message_field:
             if (self.ship.addSensor()):
-                self.message_field.config(text=f"Sensor added at {self.ship.pos}!!")
+                self.message_field.config(text=f"Sensor added at {self.ship.debug_position()}!!")
             else:
-                self.message_field.config(text=f"Failed to add sensor at {self.ship.pos}! Sensor already exists.")
+                self.message_field.config(text=f"Failed to add sensor at {self.ship.debug_position()}! Sensor already exists.")
 
 
 
@@ -160,8 +122,8 @@ class Control_Panel:
         """Display current ship status in a popup window"""
         if self.gui_root:
             status_info = (
-                f"Ship: {self.ship.name}\n"
-                f"Position: {self.ship.pos}\n"
+                f"Ship: {self.ship.debug_name()}\n"
+                f"Position: {self.ship.debug_position()}\n"
                 f"Energy: *energy*\n"
                 f"Supplies: *supplies*\n"
                 f"Money: *money*\n"
@@ -182,7 +144,7 @@ class Control_Panel:
         """Create the GUI control panel"""
         try:
             self.gui_root = tk.Tk()
-            self.gui_root.title(f"{self.ship.name} - Control Panel")
+            self.gui_root.title(f"{self.ship.debug_name()} - Control Panel")
             self.gui_root.geometry("600x600")
             
             # Configure grid
@@ -193,7 +155,7 @@ class Control_Panel:
             
             # Ship identifier
             ship_identifier = tk.Label(self.gui_root, 
-                                     text=f"{self.ship.name} Bridge Display", 
+                                     text=f"{self.ship.debug_name()} Bridge Display", 
                                      font=("Arial", 12, "bold"))
             ship_identifier.grid(column=0, row=0, columnspan=3, sticky="SW")
             
@@ -231,7 +193,7 @@ class Control_Panel:
             
             # Information display
             tk.Label(self.gui_root, text="Current Location").grid(column=0, row=4)
-            self.location_field = tk.Label(self.gui_root, text=str(self.ship.pos))
+            self.location_field = tk.Label(self.gui_root, text=str(self.ship.debug_position()))
             self.location_field.grid(column=1, row=4, sticky="W")
             
             tk.Label(self.gui_root, text="Energy").grid(column=0, row=5)
@@ -272,17 +234,17 @@ class Control_Panel:
         """Update the display fields (useful for external updates)"""
         # Update location
         if self.location_field:
-            self.location_field.config(text=str(self.ship.pos))
+            self.location_field.config(text=str(self.ship.debug_position()))
 
         # Update energy field
         if self.energy_field:
-            self.energy_field.config(text=str(self.ship.energy))
+            self.energy_field.config(text=str(self.ship.debug_energy()))
 
         # Update supplies field
         if self.supplies_field:
-            self.supplies_field.config(text=f"{self.ship.supplies}")
+            self.supplies_field.config(text=f"{self.ship.debug_supplies()}")
 
         # Update money field
         if self.money_field:
-            self.money_field.config(text=str(self.ship.money))
+            self.money_field.config(text=str(self.ship.debug_money()))
 
