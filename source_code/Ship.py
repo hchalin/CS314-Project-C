@@ -2,6 +2,7 @@ from load_artifacts import get_game_data
 from StarMap import StarMap
 from Sensor import Sensor
 from Control_Panel import Control_Panel
+from celestial_map import celestial_map, get_initial_planets
 
 class Ship:
   # Define max location (applies for both x and y)
@@ -21,7 +22,12 @@ class Ship:
     self.sensors: list[Sensor] = []  # Initialize sensors array as empty list
     self.control_panel = Control_Panel(self)
 
-    self.starMap = StarMap(get_game_data()["planets"], get_game_data()["target"], get_game_data()["artifacts"])
+    # Initialize star map and celestial map
+    game_data = get_game_data()
+    self.star_map = StarMap(game_data["planets"], game_data["target"], game_data["artifacts"])
+    initial_planets = get_initial_planets(game_data)
+    self.celestial_map = celestial_map(initial_planets)
+    
     print(f"Ship {self.name} initialized at position {self.pos}")
 
   def move(self, new_position: tuple):
@@ -32,7 +38,6 @@ class Ship:
 
     #TODO - Get movemnt to work with sensors to detect celestial objects
 
-    
     return
 
   def addSensor(self) -> bool:
@@ -46,7 +51,8 @@ class Ship:
     # Consume 2% of supplies for sensor deployment
     self.supplies = round(self.supplies * 0.98, 2)  # 98% remaining (2% consumed)
     
-    new_sensor = Sensor(self.pos)   # Initialize sensor at current position
+    new_sensor = Sensor(self.pos, 2, self.star_map, self.celestial_map)   # Initialize sensor at current position
+    new_sensor.scan(self.pos)
     self.sensors.append(new_sensor)
     return True
 
@@ -56,4 +62,15 @@ class Ship:
       self.control_panel.start_gui_loop()
     else: 
       print("Control panel not initialized.")
+      
+  def display_celestial_map(self):
+    """Display the current celestial map
+        NOTE: Keep the print logs for debugging / testing 
+    """
+    if self.celestial_map:
+      print("\n=== CELESTIAL MAP ===")
+      print(self.celestial_map.print_celestial_map())   # Call the celestial_map print method
+      print("====================\n")
+    else:
+      print("No celestial map available.")
 
