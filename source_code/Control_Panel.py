@@ -9,6 +9,8 @@ This class serves as the main interface between the user and the ship's systems.
 
 NOTE: When you add more functionality to the control panel, if it is supposed to update 
         any GUI, do not forget to call the 'update_display()' method!
+    
+- Hayden Chalin
 """
 
 import tkinter as tk
@@ -18,6 +20,8 @@ from Sensor import Sensor
 import load_artifacts
 from celestial_map import celestial_map
 from celestial_map import get_initial_planets
+
+# TODO: Consder making the control panel a derived ship class so you're not redefining ship location, supplies etc...
 
 class Control_Panel:
     def __init__(self, ship):
@@ -59,9 +63,7 @@ class Control_Panel:
     
     '''
     Movement
-
     '''
-
     def _handle_movement(self, direction):
         """Handle ship movement in specified direction"""
 

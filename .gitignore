@@ -3,6 +3,7 @@
 *.pyd
 *.pyo
 __pycache__/
+.venv/
 
 # Distribution / packaging
 .Python
