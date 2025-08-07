@@ -1,0 +1,39 @@
+80/06/25 Standup meeting
+
+1. SH1
+	- Eng: Josiah baker
+	- Hours to implement (estimate): 4 hours
+	- Hours to implement (actual): 1 hr 15 minutes
+	- Manual testing completed
+2. SH2
+	- Eng: Josiah Baker
+	- Hours to implement(estimate): 4 hours
+	- Hours to implement(actual): 30 minutes
+	- Manual testing completed
+3. SH3
+	- Eng: Simrah Saleem
+	- Hours to implement(estimate): 2 hours
+	- Hours to implement(actual): 1 hour
+	- Manual testing completed
+4. SH4
+	- Eng: Simrah Saleem
+	- Hours to implement(estimate): 4 hours
+	- Hours to implement(actual): 30 minutes
+	- Manual testing completed
+5. SH7
+	- Eng: Lex Albrandt
+	- Hours to implement(estimate): 4 hours
+	- Hours to implement(actual): 4 hours
+	- Pytest suite (available in testing folder in repository)
+	- Acceptance criteria not completed: integretion with sensor and movement
+6. SH5
+	- Eng: Hassan Abdi
+	- Hours to implement(estimate): 4 hours
+	- Hours to implement(actual): 5 hours
+	- Manual testing complete making sure files loaded correctly
+7. SH6
+	- Eng: Hayden Chalin
+	- Hours to implement(estimate): 4 hours
+	- Hours to implement(actual): 4 hours
+	- Automated testing completed
+

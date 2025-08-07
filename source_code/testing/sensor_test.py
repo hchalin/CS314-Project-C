@@ -139,7 +139,14 @@ class TestSensorFunctionality:
         detected_artifacts = {}
 
 
-        ## NOTE: Use this for implementation
+        ''' 
+        
+            NOTE: Use this for implementation
+
+
+            This is a brute force approach
+
+        '''
         
         # Find planets within range
         for planet_name, planet_pos in planets.items():
@@ -158,6 +165,9 @@ class TestSensorFunctionality:
                     "x": artifact_x,
                     "y": artifact_y
                 }
+
+
+        # NOTE: Use this to add the cel_map's data
         
         # Mock updating the celestial map (replace with actual implementation)
         if hasattr(ship, 'starMap'):
@@ -200,7 +210,7 @@ class TestSensorFunctionality:
         
         for i in range(num_sensors):
             # Move ship to a new position for each sensor
-            ship.pos = (ship.pos[0] + i, ship.pos[1])
+            ship.pos = (ship.pos[0] + i, ship.pos[1])       # This will be random
             
             if hasattr(ship, 'addSensor'):
                 result = ship.addSensor()
@@ -235,7 +245,7 @@ class TestSensorFunctionality:
         ]
         
         for pos in boundary_positions:
-            distance = max(abs(pos[0]), abs(pos[1]))  # Chebyshev distance from origin
+            distance = max(abs(pos[0]), abs(pos[1]))  # distance from origin
             assert distance <= 2, f"Position {pos} should be within sensor range"
 
 
