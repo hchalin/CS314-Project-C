@@ -55,6 +55,17 @@ class Ship:
   def debug_name(self):
      return self.__name
 
+  def engine_type(self, type: str) -> float:
+      if type == "basic":
+            return 10
+          # verify names and stats later
+      elif type == "upgraded":
+            return 5
+      elif type == "pro":
+            return 1
+      else:
+            raise ValueError
+
   def move(self, distance: float, angle: float):
       self.__position[0] += round(distance*math.cos(math.radians(angle)))
       self.__position[1] += round(distance*math.sin(math.radians(angle)))
@@ -73,7 +84,7 @@ class Ship:
       if self.__energy <= 0 or self.__supplies <= 0:
           if shared_items.playstyle == "regular play":
               #raise death exception
-              raise DeathException("Out of", "energy" if self.__energy <= 0 else "supplies")
+              raise DeathException(f"Out of {"energy" if self.__energy <= 0 else "supplies"}")
               pass
           elif shared_items.playstyle != "never dies":
               raise ValueError

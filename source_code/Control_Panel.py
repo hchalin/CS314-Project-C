@@ -78,7 +78,7 @@ class Control_Panel:
         except ValueError as msg:
             print(f"{msg} There is a value in the configuration file that is not correct")
         except Ship.DeathException:
-            if (self.ship.energy <= 0):
+            if (self.ship.debug_energy() <= 0):
                 cause = "Energy"
             else:
                 cause = "Supplies"
