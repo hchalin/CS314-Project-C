@@ -13,3 +13,4 @@ set_position = [0, 0]
 playstyle = "regular play"
 max = 10
 starting_cash = 10000
+sensor_cost = 2

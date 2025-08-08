@@ -18,8 +18,6 @@ class WormholeException(Exception):
         super().__init__(self.__message)
 
 class Ship:
-  # Define max location (applies for both x and y)
-  MAX_CP = 128
 
   def __init__(self, name: str, position: tuple):
     # set ship status
@@ -47,6 +45,9 @@ class Ship:
     self.supplies = round((self.supplies * self.supply_usage_rate), 2)    # update supplies on move
     self.energy = self.energy - 10            # update supplies on move
     self.pos = new_position
+
+  def use_supplies(self, amount: float):
+      self.__supplies -= amount
 
   def use_energy(self, amount: float):
       self.__energy -= amount
@@ -117,10 +118,10 @@ class Ship:
         return False
 
     # Consume 2% of supplies for sensor deployment
-    self.supplies = round(self.supplies * 0.98, 2)  # 98% remaining (2% consumed)
+    self.use_supplies(shared_items.sensor_cost)  # 98% remaining (2% consumed)
     
-    new_sensor = Sensor(self.pos, 2, self.star_map, self.celestial_map)   # Initialize sensor at current position
-    new_sensor.scan(self.pos)
+    new_sensor = Sensor(self.__position, 2, self.star_map, self.celestial_map)   # Initialize sensor at current position
+    new_sensor.scan(self.__position)
     self.sensors.append(new_sensor)
     return True
 

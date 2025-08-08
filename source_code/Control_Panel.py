@@ -78,6 +78,7 @@ class Control_Panel:
                     self.ship.move(1, 180)
                 case "right":
                     self.ship.move(1, 0)
+                #TODO default to raising an error
         except ValueError as msg:
             print(f"{msg} There is a value in the configuration file that is not correct")
         except Ship.DeathException:
