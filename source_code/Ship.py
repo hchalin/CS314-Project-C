@@ -122,7 +122,7 @@ class Ship:
     
     new_sensor = Sensor(self.__position, 2, self.star_map, self.celestial_map)   # Initialize sensor at current position
     new_sensor.scan(self.__position)
-    self.sensors.append(new_sensor)
+    self.__sensors.append(new_sensor)                                                   # Added double underscore for fix
     return True
 
   def start(self):
