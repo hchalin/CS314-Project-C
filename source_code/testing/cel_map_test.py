@@ -1,7 +1,7 @@
 """ Celestial Map Class test suite
 
 Author: Lex Albrandt
-Date/version: 08/04/25 v1
+Date/version: 08/20/25 v2
 
 Purpose:
     Automated testing pytest suite for the celestial map class
@@ -95,3 +95,24 @@ def test_get_initial_planets(game_data):
     }
     
     result = get_initial_planets(game_data)
+    assert result == expected
+
+    
+def test_visit_accepts_position(game_data):
+    """ Test to ensure that lists from other classes are appropriately 
+        converted to tuples
+
+    Args:
+        game_data (Dict): Python fixture dictionary for game data
+    """
+
+    initial_planets = get_initial_planets(game_data)
+    cm = celestial_map(initial_planets)
+    position = [5, 6]
+    planet = "Mars"
+    artifact = "None"
+
+    cm.visit(position, planet, artifact)
+
+    assert tuple(position) in cm.map_data["visited"]
+    assert cm.map_data["visited_info"][tuple(position)]
