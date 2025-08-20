@@ -2,7 +2,7 @@
 Celestial map class
 
 Author: Lex Albrandt
-Date/version: 08/04/25 v1
+Date/version: 08/20/25 v2
         
 Purpose: 
     Contains functions relating to the celestial map
@@ -45,8 +45,9 @@ class celestial_map:
         }
 
         for name, coords in initial_planets.items():
-            self.map_data["visited"].add(coords)
-            self.map_data["visited_info"][coords] = {
+            coords_tuple = tuple(coords)
+            self.map_data["visited"].add(coords_tuple)
+            self.map_data["visited_info"][coords_tuple] = {
                 "planet": name,
                 "artifact": None
             }
@@ -63,14 +64,12 @@ class celestial_map:
             Returns: None
         """
 
-        self.map_data["visited"].add(position)
+        pos_tuple = tuple(position)
+        self.map_data["visited"].add(pos_tuple)
 
-        # If this location has not been visited, add a dictionary entry
-        if "visit_info" not in self.map_data:
-            self.map_data["visited_info"] = {}
 
         # Adds dictionary information for the current location
-        self.map_data["visited_info"][position] = {
+        self.map_data["visited_info"][pos_tuple] = {
             "planet": planet,
             "artifact": artifact
         }
@@ -90,7 +89,7 @@ class celestial_map:
         
         for position, info in self.map_data["visited_info"].items():
             planet = info.get("planet", "None")
-            artifact = info.get("artiifact", "None")
+            artifact = info.get("artifact", "None")
             lines.append(f"Position: {position} | Planet: {planet} | Artifact: {artifact}")
         return "\n".join(lines)
         
