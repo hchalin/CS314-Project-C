@@ -146,7 +146,15 @@ class Control_Panel:
         """Display celestial map in a popup window"""
         if self.gui_root:
             info_str = self.map.print_celestial_map()
-            messagebox.showinfo("Celestial Map", info_str)
+            popup = tk.Toplevel(self.gui_root)
+            popup.title("Celestial Map")
+            popup.geometry("600x400")
+            text_widget = tk.Text(popup, wrap="none", font=("Consolas", 12))
+            text_widget.insert("1.0", info_str)
+            text_widget.config(state="disabled")
+            text_widget.pack(expand=True, fill="both", padx=10, pady=10)
+            close_btn = tk.Button(popup, text="Close", command=popup.destroy)
+            close_btn.pack(pady=5)
         
     
     def _create_gui(self):
