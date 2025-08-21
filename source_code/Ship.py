@@ -114,7 +114,7 @@ class Ship:
 
     # Loop through all the sensors and check to see if there is a sensor at current location
     for sensor in self.__sensors:
-      if sensor.__position == self.__position:
+      if hasattr(sensor, '_Sensor__position') and sensor._Sensor__position == self.__position:
         return False
 
     # Consume 2% of supplies for sensor deployment
