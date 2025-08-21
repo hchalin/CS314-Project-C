@@ -24,10 +24,11 @@ HOURS TO IMPLEMENT (estimate): 2 hours
 HOURS TO IMPLEMENT (actual):
 ENGINEER: Hassan Abdi
 
+COMPLETE
 STORY:SH6     - Sensor class
 HOURS TO IMPLEMENT (estimate): 4 Hours
-HOURS TO IMPLEMENT (actual):
-ENGINEER: Hayden Chalin
+HOURS TO IMPLEMENT (actual):    3 Hours
+ENGINEER: Hayden Chalin             
 
 STORY:SH2
 HOURS TO IMPLEMENT (estimate): 4 Hours
