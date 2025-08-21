@@ -114,12 +114,17 @@ class Control_Panel:
     def _handle_sensor_deployment(self):
         """Handle sensor deployment at current ship position"""
         if self.message_field:
-            if (self.ship.addSensor()):
-                self.message_field.config(text=f"Sensor added at {self.ship.debug_position()}!!")
-            else:
+            scan_results = self.ship.addSensor()
+            if scan_results is None:
                 self.message_field.config(text=f"Failed to add sensor at {self.ship.debug_position()}! Sensor already exists.")
-
-
+            elif scan_results:
+                found_msgs = []
+                for obj in scan_results:
+                    found_msgs.append(f"{obj['type']} {obj['name']} at {obj['position']}")
+                msg = "Sensor scan: " + ", ".join(found_msgs)
+                self.message_field.config(text=msg)
+            else:
+                self.message_field.config(text=f"Sensor added at {self.ship.debug_position()}! No objects detected.")
 
     
     def _display_status(self):

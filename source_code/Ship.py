@@ -109,21 +109,21 @@ class Ship:
           #raise wormhole exception
           raise WormholeException("Hit a wormhole due to being out of bounds")
 
-  def addSensor(self) -> bool:
-    """Add a sensor to the ship's sensors array and consume 2% supplies"""
+  def addSensor(self):
+    """Add a sensor to the ship's sensors array and consume 2% supplies. Returns scan results."""
 
     # Loop through all the sensors and check to see if there is a sensor at current location
     for sensor in self.__sensors:
       if hasattr(sensor, '_Sensor__position') and sensor._Sensor__position == self.__position:
-        return False
+        return None  # Sensor already exists
 
     # Consume 2% of supplies for sensor deployment
     self.use_supplies(shared_items.sensor_cost)  # 98% remaining (2% consumed)
     
     new_sensor = Sensor(self.__position, 2, self.star_map, self.celestial_map)   # Initialize sensor at current position
-    new_sensor.scan(self.__position)
+    scan_results = new_sensor.scan(self.__position)
     self.__sensors.append(new_sensor)                                                   # Added double underscore for fix
-    return True
+    return scan_results
 
   def start(self):
     """Start the control panel for the ship"""
