@@ -73,8 +73,10 @@ def test_visit(game_data):
     cm.visit(position, planet, artifact)
 
     assert position in cm.map_data["visited"] 
-    assert cm.map_data["visited_info"][position]["planet"] == planet
-    assert cm.map_data["visited_info"][position]["artifact"] == artifact
+    assert planet in cm.map_data["visited_info"][position]["planets"]
+    assert artifact in cm.map_data["visited_info"][position]["artifacts"]
+    assert len(cm.map_data["visited"]) == 4
+    assert len(cm.map_data["visited_info"]) == 4
 
     
 def test_get_initial_planets(game_data):

@@ -33,12 +33,13 @@ class Control_Panel:
         
         # Load game data
         game_data = load_artifacts.get_game_data()          # This is redundant, but kept for clarity
-        self.artifacts = game_data["artifacts"]
-        self.planets = game_data["planets"]
-        self.target_planet = game_data["target"]
 
         # Load the celestial map
         initial_planets = get_initial_planets(game_data)
+        self.artifacts = game_data["artifacts"]
+        self.planets = game_data["planets"]
+        self.target_planet = game_data["target"]
+        
         self.map = celestial_map(initial_planets)
 
         # GUI elements (will be set when GUI is created)
@@ -114,17 +115,10 @@ class Control_Panel:
     def _handle_sensor_deployment(self):
         """Handle sensor deployment at current ship position"""
         if self.message_field:
-            scan_results = self.ship.addSensor()
-            if scan_results is None:
-                self.message_field.config(text=f"Failed to add sensor at {self.ship.debug_position()}! Sensor already exists.")
-            elif scan_results:
-                found_msgs = []
-                for obj in scan_results:
-                    found_msgs.append(f"{obj['type']} {obj['name']} at {obj['position']}")
-                msg = "Sensor scan: " + ", ".join(found_msgs)
-                self.message_field.config(text=msg)
+            if (self.ship.addSensor(self.map)):
+                self.message_field.config(text=f"Sensor added at {self.ship.debug_position()}!!")
             else:
-                self.message_field.config(text=f"Sensor added at {self.ship.debug_position()}! No objects detected.")
+                self.message_field.config(text=f"Failed to add sensor at {self.ship.debug_position()}! Sensor already exists.")
 
     
     def _display_status(self):

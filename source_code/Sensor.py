@@ -65,7 +65,7 @@ class Sensor:
           'name': planet_name,
           'position': planet_pos
         })
-        planet_found = planet_name
+        planet_found = True
         print(f"Detected planet: {planet_name} at {planet_pos}")
     
     # Check artifacts within range
@@ -74,10 +74,8 @@ class Sensor:
       if x_min <= ax <= x_max and y_min <= ay <= y_max:
         detected_objects.append({
           'type': artifact_data['type'],
-          'name': artifact_name,
-          'position': (ax, ay)
-        })
-        artifact_found = artifact_name
+          'name': artifact_name, 'position': (ax, ay) })
+        artifact_found = True
         print(f"Detected {artifact_data['type']}: {artifact_name} at ({ax}, {ay})")
     
     '''
@@ -92,14 +90,29 @@ class Sensor:
     '''
      Add detected objects to celestial map
     '''
+
     if self.celestial_map and (planet_found or artifact_found):
-      self.celestial_map.visit(self.pos, planet_found, artifact_found)
+      
+      # Add each object found as a separate entry
+      for obj in detected_objects:
+        if obj['type'] == 'PLANET':
+          self.celestial_map.visit(obj['position'], obj['name'], None)
+          print(f"{obj['position']}, {obj['name']}, none")
+        else:
+          self.celestial_map.visit(obj['position'], None, obj['name'])
+      print(f"Added scan results to celestial map at position {self.pos}")
+
+
+    """ Scratching this for now (see commit 08/21)
+    if self.celestial_map and (planet_found or artifact_found):
+      self.celestial_map.visit(self.pos, planet_found, artifact_found)                              
       print(f"Added scan results to celestial map at position {self.pos}")
     elif self.celestial_map:
       # Even if nothing found, record the visit
       self.celestial_map.visit(self.pos, None, None)
       print(f"Added empty scan to celestial map at position {self.pos}")
-    
+    """ 
+
     print(f"Scan complete. Found {len(detected_objects)} objects.")
     return detected_objects
 

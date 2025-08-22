@@ -32,11 +32,9 @@ class Ship:
     self.__sensors: list[Sensor] = []  # Initialize sensors array as empty list
     self.__control_panel = Control_Panel(self)
 
-    # Initialize star map and celestial map
+    # Initialize star map
     game_data = get_game_data()
     self.star_map = StarMap(game_data["planets"], game_data["target"], game_data["artifacts"])
-    initial_planets = get_initial_planets(game_data)
-    self.celestial_map = celestial_map(initial_planets)
     
     print(f"Ship {self.__name} initialized at position {self.__position}")
 
@@ -109,8 +107,8 @@ class Ship:
           #raise wormhole exception
           raise WormholeException("Hit a wormhole due to being out of bounds")
 
-  def addSensor(self):
-    """Add a sensor to the ship's sensors array and consume 2% supplies. Returns scan results."""
+  def addSensor(self, celestial_map) -> bool:
+    """Add a sensor to the ship's sensors array and consume 2% supplies"""
 
     # Loop through all the sensors and check to see if there is a sensor at current location
     for sensor in self.__sensors:
@@ -120,10 +118,10 @@ class Ship:
     # Consume 2% of supplies for sensor deployment
     self.use_supplies(shared_items.sensor_cost)  # 98% remaining (2% consumed)
     
-    new_sensor = Sensor(self.__position, 2, self.star_map, self.celestial_map)   # Initialize sensor at current position
-    scan_results = new_sensor.scan(self.__position)
+    new_sensor = Sensor(self.__position, 2, self.star_map, celestial_map)   # Initialize sensor at current position
+    new_sensor.scan(self.__position)
     self.__sensors.append(new_sensor)                                                   # Added double underscore for fix
-    return scan_results
+    return True
 
   def start(self):
     """Start the control panel for the ship"""

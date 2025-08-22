@@ -48,8 +48,8 @@ class celestial_map:
             coords_tuple = tuple(coords)
             self.map_data["visited"].add(coords_tuple)
             self.map_data["visited_info"][coords_tuple] = {
-                "planet": name,
-                "artifact": None
+                "planets": [name],                                                                                   # changed these to lists
+                "artifacts": []                                                                                      # changed these to lists
             }
 
     
@@ -63,16 +63,38 @@ class celestial_map:
         
             Returns: None
         """
+        print(f"{position}, {planet}, {artifact}")
 
         pos_tuple = tuple(position)
         self.map_data["visited"].add(pos_tuple)
+    
+        # Initialize an entry if the pos_tuple does not already exist
+        if pos_tuple not in self.map_data["visited_info"]:
+            self.map_data["visited_info"][pos_tuple] = {
+                "planets": [],
+                "artifacts": []
+            }
+        
+        # Append the lists if planets/artifacts are found
+        if planet and planet not in self.map_data["visited_info"][pos_tuple]["planets"]:
+            self.map_data["visited_info"][pos_tuple]["planets"].append(planet)
 
 
+        if artifact and artifact not in self.map_data["visited_info"][pos_tuple]["artifacts"]:
+            self.map_data["visited_info"][pos_tuple]["artifacts"].append(artifact)
+
+        for position, info in self.map_data["visited_info"].items():
+            print(f"position: {position}")
+            print(f"Planets: {info.get('planets', [])}")
+            print(f"Artifacts: {info.get('artifacts', [])}")
+
+    """
         # Adds dictionary information for the current location
         self.map_data["visited_info"][pos_tuple] = {
             "planet": planet,
             "artifact": artifact
         }
+    """
     
     
     def print_celestial_map(self) -> None:
@@ -88,9 +110,9 @@ class celestial_map:
         lines = []
         lines.append("\n=== CELESTIAL MAP VISITS ===") 
         for position, info in self.map_data["visited_info"].items():
-            planet = info.get("planet", "None")
-            artifact = info.get("artifact", "None")
-            lines.append(f"Position: {position} | Planet: {planet} | Artifact: {artifact}")
+            planets = ', '.join(info.get("planets", [])) or "None"
+            artifacts = ', '.join(info.get("artifacts", [])) or "None"
+            lines.append(f"Position: {position} | Planets: {planets} | Artifacts: {artifacts}")
         return "\n".join(lines)
         
         '''
