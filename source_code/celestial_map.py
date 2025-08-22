@@ -53,24 +53,48 @@ class celestial_map:
             }
 
     
-    def visit(self, position: Tuple, planets: list, artifacts: list) -> None:
+    def visit(self, position: Tuple, planet: str, artifact: str) -> None:
         """ Adds a visit to the celestial map with position and any planets or artifacts found
 
             Args:
                 position (Tuple): current position in the form (int, int)
-                planets (list): names of planets found
-                artifacts (list): names of artifacts found
+                planet (str): name of planet
+                artifact (str): name of artifact
+        
             Returns: None
         """
+
         pos_tuple = tuple(position)
         self.map_data["visited"].add(pos_tuple)
+
+
+        # Adds dictionary information for the current location
         self.map_data["visited_info"][pos_tuple] = {
-            "planets": planets,
-            "artifacts": artifacts
+            "planet": planet,
+            "artifact": artifact
         }
     
     
-    def print_celestial_map(self) -> str:
+    def print_celestial_map(self) -> None:
+        """ Print the celestial map, this will likely be done in a popup box
+        
+            Args: None 
+            
+            Returns: None
+        """
+        if not self.map_data["visited_info"]:
+            return "No locations visited yet."
+
+        lines = []
+        lines.append("\n=== CELESTIAL MAP VISITS ===") 
+        for position, info in self.map_data["visited_info"].items():
+            planet = info.get("planet", "None")
+            artifact = info.get("artifact", "None")
+            lines.append(f"Position: {position} | Planet: {planet} | Artifact: {artifact}")
+        return "\n".join(lines)
+        
+        '''
+        def print_celestial_map(self) -> str:
         """Return a nicely formatted string of the celestial map for GUI display."""
         if not self.map_data["visited_info"]:
             return "No locations visited yet."
@@ -86,5 +110,5 @@ class celestial_map:
             artifacts_str = ', '.join(artifacts) if artifacts else "None"
             lines.append(f"{idx:<3} {str(position):<15} {planets_str:<25} {artifacts_str:<25}")
         lines.append("-" * 85)
-        return "\n".join(lines)
-        
+        return "\n".join(lines) 
+        '''
