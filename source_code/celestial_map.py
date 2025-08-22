@@ -2,7 +2,7 @@
 Celestial map class
 
 Author: Lex Albrandt
-Date/version: 08/20/25 v2
+Date/version: 08/22/25 v3
         
 Purpose: 
     Contains functions relating to the celestial map
@@ -79,22 +79,9 @@ class celestial_map:
         if planet and planet not in self.map_data["visited_info"][pos_tuple]["planets"]:
             self.map_data["visited_info"][pos_tuple]["planets"].append(planet)
 
-
         if artifact and artifact not in self.map_data["visited_info"][pos_tuple]["artifacts"]:
             self.map_data["visited_info"][pos_tuple]["artifacts"].append(artifact)
 
-        for position, info in self.map_data["visited_info"].items():
-            print(f"position: {position}")
-            print(f"Planets: {info.get('planets', [])}")
-            print(f"Artifacts: {info.get('artifacts', [])}")
-
-    """
-        # Adds dictionary information for the current location
-        self.map_data["visited_info"][pos_tuple] = {
-            "planet": planet,
-            "artifact": artifact
-        }
-    """
     
     
     def print_celestial_map(self) -> None:

@@ -90,28 +90,15 @@ class Sensor:
     '''
      Add detected objects to celestial map
     '''
-
     if self.celestial_map and (planet_found or artifact_found):
       
       # Add each object found as a separate entry
       for obj in detected_objects:
         if obj['type'] == 'PLANET':
           self.celestial_map.visit(obj['position'], obj['name'], None)
-          print(f"{obj['position']}, {obj['name']}, none")
         else:
           self.celestial_map.visit(obj['position'], None, obj['name'])
       print(f"Added scan results to celestial map at position {self.pos}")
-
-
-    """ Scratching this for now (see commit 08/21)
-    if self.celestial_map and (planet_found or artifact_found):
-      self.celestial_map.visit(self.pos, planet_found, artifact_found)                              
-      print(f"Added scan results to celestial map at position {self.pos}")
-    elif self.celestial_map:
-      # Even if nothing found, record the visit
-      self.celestial_map.visit(self.pos, None, None)
-      print(f"Added empty scan to celestial map at position {self.pos}")
-    """ 
 
     print(f"Scan complete. Found {len(detected_objects)} objects.")
     return detected_objects
