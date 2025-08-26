@@ -120,7 +120,17 @@ class Control_Panel:
             else:
                 self.message_field.config(text=f"Failed to add sensor at {self.ship.debug_position()}! Sensor already exists.")
 
-    
+
+    def _land(self):
+        """Land the ship (functionality to be implemented)"""
+        if self.message_field:
+            if (self.ship.land()):
+                self.message_field.config(
+                    text=f"Landed on planet")
+            else:
+                self.message_field.config(
+                    text=f"Failed to land on planet")
+
     def _display_status(self):
         """Display current ship status in a popup window"""
         if self.gui_root:
@@ -196,7 +206,11 @@ class Control_Panel:
             sensor_button = tk.Button(self.gui_root, text="Add Sensor", 
                                     command=self._handle_sensor_deployment)
             sensor_button.grid(column=4, row=2)
-            
+
+            # Land button
+            land_button = tk.Button(self.gui_root, text="Land", 
+                                   command=self._land)
+            land_button.grid(column=4, row=3 ) 
             # Celestial map bbutton
             map_button = tk.Button(self.gui_root, text="Map",
                                     command=self._display_cel_map)

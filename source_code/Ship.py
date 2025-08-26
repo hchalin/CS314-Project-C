@@ -6,6 +6,7 @@ from celestial_map import celestial_map, get_initial_planets
 import shared_items
 import math
 import random
+from enum import Enum
 
 class DeathException(Exception):
     def __init__(self, message):
@@ -16,6 +17,13 @@ class WormholeException(Exception):
     def __init__(self, message):
         self.__message = message
         super().__init__(self.__message)
+
+
+## Ship states
+class ShipState(Enum):
+    ORBITING = "orbiting"
+    LANDED = "landed"
+    TRAVELING = "traveling"
 
 class Ship:
 
@@ -31,6 +39,10 @@ class Ship:
     self.__name = name
     self.__sensors: list[Sensor] = []  # Initialize sensors array as empty list
     self.__control_panel = Control_Panel(self)
+    self.__current_orbiting_planet: Planet = None
+    
+    ## public
+    self.state = ShipState.TRAVELING    # Set initial state
 
     # Initialize star map
     game_data = get_game_data()
@@ -43,6 +55,16 @@ class Ship:
     self.supplies = round((self.supplies * self.supply_usage_rate), 2)    # update supplies on move
     self.energy = self.energy - 10            # update supplies on move
     self.pos = new_position
+
+  def land(self):
+      self.state = ShipState.LANDED
+      return False
+
+  def orbit(self):
+      self.state = ShipState.ORBITING
+
+  def travel(self):
+      self.state = ShipState.TRAVELING
 
   def use_supplies(self, amount: float):
       self.__supplies -= amount
