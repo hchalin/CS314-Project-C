@@ -14,3 +14,9 @@ playstyle = "regular play"
 max = 10
 starting_cash = 10000
 sensor_cost = 2
+
+# min and max energy and supplies used for abandon cargo ships
+min_energy = 10
+max_energy = 50
+min_supplies = 6
+max_supplies = 30
