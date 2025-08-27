@@ -15,6 +15,9 @@ max = 10
 starting_cash = 10000
 sensor_cost = 2
 
+# rate as a percent
+frieghtor_rate = 2
+
 # min and max energy and supplies used for abandon cargo ships
 min_energy = 10
 max_energy = 50

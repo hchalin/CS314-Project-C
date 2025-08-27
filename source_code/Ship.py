@@ -6,6 +6,7 @@ from celestial_map import celestial_map, get_initial_planets
 import shared_items
 import math
 import random
+from tkinter import messagebox
 
 class DeathException(Exception):
     def __init__(self, message):
@@ -29,11 +30,11 @@ class MovingEntity:
     self._boundary = shared_items.max
     if use_rand:
       # uses average of 2 randoms because middle should be prioritized statistically
-      self._supplies = round((random.random() % (shared_items.max_supplies - shared_items.min_supplies + 1) 
-                               + random.random() % (shared_items.max_supplies - shared_items.min_supplies + 1)) 
+      self._supplies = round((random.random() * (shared_items.max_supplies - shared_items.min_supplies) 
+                               + random.random() * (shared_items.max_supplies - shared_items.min_supplies)) 
                                / 2 + shared_items.min_supplies)
-      self._energy = round((random.random() % (shared_items.max_energy - shared_items.min_energy + 1) 
-                      + random.random() % (shared_items.max_energy - shared_items.min_energy + 1)) 
+      self._energy = round((random.random() * (shared_items.max_energy - shared_items.min_energy) 
+                      + random.random() * (shared_items.max_energy - shared_items.min_energy)) 
                       / 2 + shared_items.min_energy)
       self.randomize_position()
     else:
@@ -82,7 +83,7 @@ class MovingEntity:
 class AbandonFrieghtor(MovingEntity):
   def __init__(self):
      super().__init__(True)
-     self._velocity = [round(random.random() % abs(shared_items.max_velocity) + 1), round(random.random() % 360)]
+     self._velocity = [round(random.random() * shared_items.max_velocity), round(random.random()*360)]
 
   def apply_velocity(self):
     self.change_position(self._velocity[0], self._velocity[1])
@@ -91,13 +92,12 @@ class AbandonFrieghtor(MovingEntity):
     except WormholeException:
       pass
 
-  def transfer_items(self, looting_ship):
-    gained_str = f"Gained {self.debug_energy()} energy and {self.debug_supplies()} supplies from the abandoned freighter.\n"
-    looting_ship.gain_energy(self.debug_energy())
+  def transfer_items(self):
+    ret = [self.debug_energy(), self.debug_supplies()]
+    messagebox.showinfo("Abandoned Frieghtor Found", f"Found an abandon frieghtor containg {self.debug_energy()} energy and {self.debug_supplies()} supplies")
     self.use_energy(self.debug_energy())
-    looting_ship.gain_energy(self.debug_energy())
-    self.use_energy(self.debug_energy())
-    return gained_str
+    self.use_supplies(self.debug_supplies())
+    return ret
 
 class Ship(MovingEntity):
   def __init__(self, name: str, position: tuple):
@@ -157,9 +157,19 @@ class Ship(MovingEntity):
       except ValueError:
           print(f"The value of {self._engine_type} is not valid for the engine type")
       self.change_position(distance, angle)
+      self.encounter_frieghtor()
       self.check_vitals()
       self.check_position()
     #TODO - Get movement to work with sensors to detect celestial objects
+
+  def encounter_frieghtor(self):
+     if random.random() * 100 < shared_items.frieghtor_rate:
+      new_frieghtor = AbandonFrieghtor()
+      ret = new_frieghtor.transfer_items()
+      new_frieghtor = None
+      self.gain_energy(ret[0])
+      self.gain_supplies(ret[1])
+        
 
   def addSensor(self, celestial_map) -> bool:
     """Add a sensor to the ship's sensors array and consume 2% supplies"""
