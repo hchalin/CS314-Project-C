@@ -20,3 +20,4 @@ min_energy = 10
 max_energy = 50
 min_supplies = 6
 max_supplies = 30
+max_velocity = 4

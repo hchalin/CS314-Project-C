@@ -82,7 +82,7 @@ class MovingEntity:
 class AbandonFrieghtor(MovingEntity):
   def __init__(self):
      super().__init__(True)
-     self._velocity = []
+     self._velocity = [round(random.random() % abs(shared_items.max_velocity) + 1), round(random.random() % 360)]
 
   def apply_velocity(self):
     self.change_position(self._velocity[0], self._velocity[1])
