@@ -148,11 +148,17 @@ class Ship:
       print("No celestial map available.")
 
   def display_gazetteer(self, include_discovered: bool = False):
-    text = build_gazetteer(
-       self.celestial_map if include_discovered else None,
-       show_discoveries=include_discovered
-       )
-    print(text)   
-    return text   
+      # Force restriction in Player Mode
+      if shared_items.is_player_mode() and not include_discovered:
+        # Player trying to request full gazetteer — block it
+        print("Full Gazetteer is restricted in Player Mode.")
+        return "Full Gazetteer is restricted in Player Mode.\nUse sensors to discover more!"
+
+      text = build_gazetteer(
+        self.celestial_map if include_discovered else None,
+        show_discoveries=include_discovered
+      )
+      print(text)
+      return text  
 
 

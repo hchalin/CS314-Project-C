@@ -16,11 +16,13 @@ NOTE: When you add more functionality to the control panel, if it is supposed to
 import tkinter as tk
 from tkinter import messagebox
 from tkinter import Toplevel
+from tkinter import simpledialog
 from Sensor import Sensor
 import load_artifacts
 from celestial_map import celestial_map
 from celestial_map import get_initial_planets
 import Ship
+import shared_items
 
 # TODO: Consder making the control panel a derived ship class so you're not redefining ship location, supplies etc...
 
@@ -165,9 +167,57 @@ class Control_Panel:
         text_widget.config(state="disabled")
         text_widget.pack(expand=True, fill="both", padx=10, pady=10)
         tk.Button(popup, text="Close", command=popup.destroy).pack(pady=5)
+    
+    def _refresh_gazetteer_buttons(self):
+        """Show the correct Gazetteer buttons depending on mode."""
+        if not hasattr(self, "_gaz_btns"):
+            self._gaz_btns = {}
+        # Create buttons once
+        if "gaz" not in self._gaz_btns:
+            self._gaz_btns["gaz"] = tk.Button(
+            self.gui_root, text="Gazetteer",
+            command=lambda: self._show_gazetteer_via_ship(False)
+            )
+            self._gaz_btns["gaz_disc"] = tk.Button(
+            self.gui_root, text="Gazetteer (Discovered)",
+            command=lambda: self._show_gazetteer_via_ship(True)
+            )
+            self._gaz_btns["disc_only"] = tk.Button(
+            self.gui_root, text="Discovered",
+            command=lambda: self._show_gazetteer_via_ship(True)
+            )
 
+            # Place them; we'll hide/show with grid_remove/grid
+            self._gaz_btns["gaz"].grid(column=6, row=2)
+            self._gaz_btns["gaz_disc"].grid(column=7, row=2)
+            self._gaz_btns["disc_only"].grid(column=6, row=2)
 
-        
+        # Hide all first
+        self._gaz_btns["gaz"].grid_remove()
+        self._gaz_btns["gaz_disc"].grid_remove()
+        self._gaz_btns["disc_only"].grid_remove()
+
+        # Show correct set for the mode
+        if shared_items.is_qe_mode():
+         # QA: show both full catalog + discovered
+         self._gaz_btns["gaz"].grid()
+         self._gaz_btns["gaz_disc"].grid()
+        else:
+         # Player: show discovered-only
+         self._gaz_btns["disc_only"].grid()
+
+    
+    def _toggle_qe_mode(self, *_evt):
+        """Toggle between QE and Player mode and refresh GUI accordingly."""
+        if shared_items.is_qe_mode():
+            shared_items.MODE = "player"
+            if self.message_field:
+                self.message_field.config(text="Switched to Player Mode")
+        else:
+            shared_items.MODE = "qe"
+            if self.message_field:
+                self.message_field.config(text="Switched to QE Mode")
+        self._refresh_gazetteer_buttons()
         
     
     def _create_gui(self):
@@ -220,14 +270,7 @@ class Control_Panel:
             map_button = tk.Button(self.gui_root, text="Map",
                                     command=self._display_cel_map)
             map_button.grid(column=5, row=2)
-            # Gazetteer buttons (SH-12)
-            gaz_btn = tk.Button(self.gui_root, text="Gazetteer",
-                                command=lambda: self._show_gazetteer_via_ship(False))
-            gaz_btn.grid(column=6, row=2)
 
-            gaz_disc_btn = tk.Button(self.gui_root, text="Gazetteer (Discovered)",
-                                     command=lambda: self._show_gazetteer_via_ship(True))
-            gaz_disc_btn.grid(column=7, row=2)
             
             # Information display
             tk.Label(self.gui_root, text="Current Location").grid(column=0, row=4)
@@ -254,7 +297,11 @@ class Control_Panel:
             quit_button = tk.Button(self.gui_root, text="QUIT", 
                                   command=self.stop, bg="red", fg="white")
             quit_button.grid(column=4, row=8)                   # Assign quit button to last row
-            
+           # Decide which Gazetteer buttons to show based on mode
+            self._refresh_gazetteer_buttons()
+            # Toggle Player/QE with Ctrl+Q
+            self.gui_root.bind("<Control-q>", self._toggle_qe_mode)
+ 
         except Exception as e:
             # If GUI creation fails, create a simple error dialog
             try:

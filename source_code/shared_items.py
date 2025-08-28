@@ -14,3 +14,12 @@ playstyle = "regular play"
 max = 10
 starting_cash = 10000
 sensor_cost = 2
+
+# --- Gameplay mode: "player" (default) or "qe"
+MODE = "player"                 # ← default when running main.py
+QE_PASS = "spicerack"           # 
+def is_qe_mode() -> bool:
+    return MODE.lower() == "qe"
+
+def is_player_mode() -> bool:
+    return not is_qe_mode()
