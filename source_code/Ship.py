@@ -3,6 +3,7 @@ from StarMap import StarMap
 from Sensor import Sensor
 from Control_Panel import Control_Panel
 from celestial_map import celestial_map, get_initial_planets
+from celestial_gazetteer import build_gazetteer  # for SH-12
 import shared_items
 import math
 import random
@@ -37,6 +38,9 @@ class Ship:
     self.star_map = StarMap(game_data["planets"], game_data["target"], game_data["artifacts"])
     
     print(f"Ship {self.__name} initialized at position {self.__position}")
+    
+    initial_planets = get_initial_planets(get_game_data())
+    self.celestial_map = celestial_map(initial_planets)
 
   def move(self, new_position: tuple):
     # Update the ship's position -- implement here or control panel (your choice) ? SH-1
@@ -94,7 +98,9 @@ class Ship:
       if self.__energy <= 0 or self.__supplies <= 0:
           if shared_items.playstyle == "regular play":
               #raise death exception
-              raise DeathException(f"Out of {"energy" if self.__energy <= 0 else "supplies"}")
+              reason = "energy" if self.__energy <= 0 else "supplies"
+              raise DeathException(f"Out of {reason}")
+
               pass
           elif shared_items.playstyle != "never dies":
               raise ValueError
@@ -140,4 +146,13 @@ class Ship:
       print("====================\n")
     else:
       print("No celestial map available.")
+
+  def display_gazetteer(self, include_discovered: bool = False):
+    text = build_gazetteer(
+       self.celestial_map if include_discovered else None,
+       show_discoveries=include_discovered
+       )
+    print(text)   
+    return text   
+
 

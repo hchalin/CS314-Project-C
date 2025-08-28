@@ -149,6 +149,25 @@ class Control_Panel:
             text_widget.pack(expand=True, fill="both", padx=10, pady=10)
             close_btn = tk.Button(popup, text="Close", command=popup.destroy)
             close_btn.pack(pady=5)
+
+    ''' Gazetteer Display '''
+    def _show_gazetteer_via_ship(self, include_discovered: bool = False):
+        """Open the Ship's Gazetteer output in a popup."""
+        text = self.ship.display_gazetteer(include_discovered=include_discovered)
+        if not text: 
+            text = "Gazetteer printed to console.\n\n" \
+               "Tip: Have Ship.display_gazetteer() return the string so the GUI can show it."
+        popup = tk.Toplevel(self.gui_root)
+        popup.title("Celestial Gazetteer")
+        popup.geometry("600x400")
+        text_widget = tk.Text(popup, wrap="none", font=("Consolas", 12))
+        text_widget.insert("1.0", text)
+        text_widget.config(state="disabled")
+        text_widget.pack(expand=True, fill="both", padx=10, pady=10)
+        tk.Button(popup, text="Close", command=popup.destroy).pack(pady=5)
+
+
+        
         
     
     def _create_gui(self):
@@ -201,6 +220,14 @@ class Control_Panel:
             map_button = tk.Button(self.gui_root, text="Map",
                                     command=self._display_cel_map)
             map_button.grid(column=5, row=2)
+            # Gazetteer buttons (SH-12)
+            gaz_btn = tk.Button(self.gui_root, text="Gazetteer",
+                                command=lambda: self._show_gazetteer_via_ship(False))
+            gaz_btn.grid(column=6, row=2)
+
+            gaz_disc_btn = tk.Button(self.gui_root, text="Gazetteer (Discovered)",
+                                     command=lambda: self._show_gazetteer_via_ship(True))
+            gaz_disc_btn.grid(column=7, row=2)
             
             # Information display
             tk.Label(self.gui_root, text="Current Location").grid(column=0, row=4)
