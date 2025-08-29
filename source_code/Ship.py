@@ -42,11 +42,7 @@ class Ship:
     initial_planets = get_initial_planets(get_game_data())
     self.celestial_map = celestial_map(initial_planets)
 
-  def move(self, new_position: tuple):
-    # Update the ship's position -- implement here or control panel (your choice) ? SH-1
-    self.supplies = round((self.supplies * self.supply_usage_rate), 2)    # update supplies on move
-    self.energy = self.energy - 10            # update supplies on move
-    self.pos = new_position
+ 
 
   def use_supplies(self, amount: float):
       self.__supplies -= amount
@@ -70,15 +66,11 @@ class Ship:
      return self.__name
 
   def engine_type(self, type: str) -> float:
-      if type == "basic":
-            return 10
-          # verify names and stats later
-      elif type == "upgraded":
-            return 5
-      elif type == "pro":
-            return 1
-      else:
-            raise ValueError
+    table = {"basic": 10, "upgraded": 5, "pro": 1}
+    if type not in table:
+        raise ValueError(f"Unknown engine type: {type}")
+    return table[type]
+
 
   def move(self, distance: float, angle: float):
       self.__position[0] += round(distance*math.cos(math.radians(angle)))
@@ -148,17 +140,34 @@ class Ship:
       print("No celestial map available.")
 
   def display_gazetteer(self, include_discovered: bool = False):
-      # Force restriction in Player Mode
-      if shared_items.is_player_mode() and not include_discovered:
-        # Player trying to request full gazetteer — block it
-        print("Full Gazetteer is restricted in Player Mode.")
-        return "Full Gazetteer is restricted in Player Mode.\nUse sensors to discover more!"
+    # Block full in Player mode
+    if shared_items.is_player_mode() and not include_discovered:
+        msg = "Full Gazetteer is restricted in Player Mode.\nUse sensors to discover more!"
+        print(msg)
+        return msg
 
-      text = build_gazetteer(
-        self.celestial_map if include_discovered else None,
-        show_discoveries=include_discovered
-      )
-      print(text)
-      return text  
+    if not include_discovered:
+        # Full QE view (unchanged)
+        text = build_gazetteer(None, show_discoveries=False)
+        print(text)
+        return text
 
+    # Discovered-only: show what we've actually visited
+    visits = getattr(self, "_Ship__visited", [])
+    lines = ["=== CELESTIAL GAZETTEER — DISCOVERED ONLY ===",
+             "-- Discovered (from visits) --"]
+    if visits:
+        for n, m in visits:
+            lines.append(f"{n}\t{m['type']}\t({m['x']},{m['y']})")
+    else:
+        lines.append("(none yet — stand on a planet or artifact CP)")
+    out = "\n".join(lines)
+    print(out)
+    return out
 
+  
+  def record_visit(self, name: str, meta: dict):
+    if not hasattr(self, "_Ship__visited"):
+      self.__visited = []
+    if not any(n == name for n, _ in self.__visited):
+        self.__visited.append((name, meta))

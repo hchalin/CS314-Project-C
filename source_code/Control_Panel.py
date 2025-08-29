@@ -17,11 +17,13 @@ import tkinter as tk
 from tkinter import messagebox
 from tkinter import Toplevel
 from tkinter import simpledialog
+from tkinter import simpledialog
 from Sensor import Sensor
 import load_artifacts
 from celestial_map import celestial_map
 from celestial_map import get_initial_planets
 import Ship
+import shared_items
 import shared_items
 
 # TODO: Consder making the control panel a derived ship class so you're not redefining ship location, supplies etc...
@@ -106,6 +108,28 @@ class Control_Panel:
             self.message_field.config(text=f"You have run out of {cause}! Game over.")
         except Ship.WormholeException:
             print("Hit a wormhole")
+        # --- SH-5: collision on entering exact artifact CP ---
+        pos = tuple(self.ship.debug_position())
+        hit = self._artifact_at_pos(pos)
+        if hit:
+            name, meta = hit
+            messagebox.showinfo("Collision!", f"You encountered {name} ({meta['type']}) at {meta['x']},{meta['y']}.")
+            # if Ship.record_visit exists, keep the discovered list in sync:
+            if hasattr(self.ship, "record_visit"):
+                try:
+                    self.ship.record_visit(name, meta)
+                except Exception:
+                    pass
+
+        # (Optional) mark planet arrivals as visits too
+        p = self._planet_at_pos(pos)
+        if p and hasattr(self.ship, "record_visit"):
+            pname, (px, py) = p
+            try:
+                self.ship.record_visit(pname, {"type": "PLANET", "x": px, "y": py})
+            except Exception:
+                pass
+
 
         self.update_display()
         if self.message_field:
@@ -127,15 +151,15 @@ class Control_Panel:
         """Display current ship status in a popup window"""
         if self.gui_root:
             status_info = (
-                f"Ship: {self.ship.debug_name()}\n"
-                f"Position: {self.ship.debug_position()}\n"
-                f"Energy: *energy*\n"
-                f"Supplies: *supplies*\n"
-                f"Money: *money*\n"
-                f"Target Planet: {self.target_planet}\n"
-                f"Planets in system: {len(self.planets)}\n"
-                f"Artifacts detected: {len(self.artifacts)}"
-            )
+            f"Ship: {self.ship.debug_name()}\n"
+            f"Position: {self.ship.debug_position()}\n"
+            f"Energy: {self.ship.debug_energy()}\n"
+            f"Supplies: {self.ship.debug_supplies()}\n"
+            f"Money: {self.ship.debug_money()}\n"
+            f"Target Planet: {self.target_planet}\n"
+            f"Planets in system: {len(self.planets)}\n"
+            f"Artifacts detected: {len(self.artifacts)}"
+        )
             messagebox.showinfo("Ship Status", status_info)
             
     def _display_cel_map(self):
@@ -182,29 +206,39 @@ class Control_Panel:
             self.gui_root, text="Gazetteer (Discovered)",
             command=lambda: self._show_gazetteer_via_ship(True)
             )
-            self._gaz_btns["disc_only"] = tk.Button(
-            self.gui_root, text="Discovered",
-            command=lambda: self._show_gazetteer_via_ship(True)
-            )
+            
 
             # Place them; we'll hide/show with grid_remove/grid
             self._gaz_btns["gaz"].grid(column=6, row=2)
             self._gaz_btns["gaz_disc"].grid(column=7, row=2)
-            self._gaz_btns["disc_only"].grid(column=6, row=2)
+            
 
         # Hide all first
         self._gaz_btns["gaz"].grid_remove()
         self._gaz_btns["gaz_disc"].grid_remove()
-        self._gaz_btns["disc_only"].grid_remove()
+        
 
         # Show correct set for the mode
         if shared_items.is_qe_mode():
          # QA: show both full catalog + discovered
          self._gaz_btns["gaz"].grid()
          self._gaz_btns["gaz_disc"].grid()
-        else:
-         # Player: show discovered-only
-         self._gaz_btns["disc_only"].grid()
+        
+         # Player mode
+        
+
+    def _planet_at_pos(self, pos: tuple[int, int]):
+        for name, (x, y) in self.ship.star_map.planets.items():
+            if (x, y) == pos:
+                return name, (x, y)
+        return None
+    def _artifact_at_pos(self, pos: tuple[int, int]):
+        for name, meta in self.ship.star_map.artifacts.items():
+            if (meta["x"], meta["y"]) == pos:
+                return name, meta
+        return None
+
+
 
     
     def _toggle_qe_mode(self, *_evt):
@@ -297,6 +331,11 @@ class Control_Panel:
             quit_button = tk.Button(self.gui_root, text="QUIT", 
                                   command=self.stop, bg="red", fg="white")
             quit_button.grid(column=4, row=8)                   # Assign quit button to last row
+           # Decide which Gazetteer buttons to show based on mode
+            self._refresh_gazetteer_buttons()
+            # Toggle Player/QE with Ctrl+Q
+            self.gui_root.bind("<Control-q>", self._toggle_qe_mode)
+ 
            # Decide which Gazetteer buttons to show based on mode
             self._refresh_gazetteer_buttons()
             # Toggle Player/QE with Ctrl+Q
