@@ -61,7 +61,20 @@ class Ship:
       return False
 
   def orbit(self):
-      self.state = ShipState.ORBITING
+      """Set ship state to ORBITING if near a planet, else print error."""
+      if self.is_near_planet():
+          self.state = ShipState.ORBITING
+          print(f"{self.__name} is now orbiting at position {self.__position}")
+          return True
+      else:
+          print("Cannot orbit: not near any planet.")
+          return False
+
+  def is_near_planet(self):
+      """Returns True if ship's position matches any planet position in star_map."""
+      if not hasattr(self, 'star_map') or not hasattr(self.star_map, 'planets'):
+          return False
+      return tuple(self.__position) in [tuple(pos) for pos in self.star_map.planets.values()]
 
   def travel(self):
       self.state = ShipState.TRAVELING
